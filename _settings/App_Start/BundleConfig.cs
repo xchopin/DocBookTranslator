@@ -24,8 +24,7 @@ namespace ProductTranslator
                       "~/assets/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/assets/Content/css").Include(
-                      "~/assets/Content/bootstrap.css",
-                      "~/assets/Content/site.css"));
+                      "~/assets/Content/app.css"));
         }
     }
 }

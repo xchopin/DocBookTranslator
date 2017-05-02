@@ -153,7 +153,7 @@
     <Content Include="favicon.ico" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="assets\Content\Site.css" />
+    <Content Include="assets\Content\app.css" />
     <Content Include="assets\Scripts\bootstrap.js" />
     <Content Include="assets\Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -186,6 +186,7 @@
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="assets\img\" />
     <Folder Include="Models\" />
     <Folder Include="_settings\App_Data\" />
   </ItemGroup>
