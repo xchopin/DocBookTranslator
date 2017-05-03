@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Xml;
-using ProductTranslator.Resources.Helpers;
 
 namespace ProductTranslator.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-
-    
+       
         public ActionResult Index()
         {
             XmlDocument xml = new XmlDocument();
@@ -20,18 +18,15 @@ namespace ProductTranslator.Controllers
 
         public ActionResult SearchProduct()
         {
-            //String productId = Request.Form["productId"];
+            String productId = Request["productId"];
 
+            if (System.IO.File.Exists(Server.MapPath("~/Resources/DB/Eau/fr/" + productId + ".xml"))) {
+                this.Flash("success", "File exists !");
+                return RedirectToAction("Index");
+            }
 
-            XmlDocument xml = new XmlDocument();
-            xml.Load(Server.MapPath("~/Resources/markets.xml"));
-            ViewBag.markets = xml.SelectNodes("/markets/market");
-
-            Helper.flash("danger", "This product does not exist!");
-          
-            return Helper.render("Home/Index");
-        
- 
+            this.Flash("danger", "Error: this product id does not exist!");
+            return RedirectToAction("Index");
         }
 
         public ActionResult Contact()
