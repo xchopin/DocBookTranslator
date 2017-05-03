@@ -22,7 +22,7 @@ namespace ProductTranslator.Controllers
 
             if (System.IO.File.Exists(Server.MapPath("~/Resources/DB/Eau/fr/" + productId + ".xml"))) {
                 this.Flash("success", "File exists !");
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Product", new { id = productId });
             }
 
             this.Flash("danger", "Error: this product id does not exist!");
