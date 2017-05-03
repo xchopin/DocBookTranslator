@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml;
 
 namespace ProductTranslator.Controllers
 {
@@ -10,6 +11,11 @@ namespace ProductTranslator.Controllers
     {
         public ActionResult Index()
         {
+
+            XmlDocument xml = new XmlDocument();
+            xml.Load(Server.MapPath("~/Resources/markets.xml"));
+            XmlNodeList xnList = xml.SelectNodes("/markets/market");
+            ViewBag.markets = xnList;
             return View();
         }
 
@@ -28,3 +34,4 @@ namespace ProductTranslator.Controllers
         }
     }
 }
+ 
