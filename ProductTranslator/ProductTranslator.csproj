@@ -138,6 +138,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Resources\Helpers\Helper.cs" />
     <Compile Include="_settings\App_Start\BundleConfig.cs" />
     <Compile Include="_settings\App_Start\FilterConfig.cs" />
     <Compile Include="_settings\App_Start\RouteConfig.cs" />
@@ -150,26 +151,17 @@
   <ItemGroup>
     <Content Include="assets\Content\bootstrap.css" />
     <Content Include="assets\Content\bootstrap.min.css" />
+    <Content Include="assets\Scripts\jquery-3.2.1.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="assets\Content\app.css" />
-    <Content Include="assets\Scripts\bootstrap.js" />
     <Content Include="assets\Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="assets\Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="assets\Scripts\jquery-1.10.2.js" />
-    <Content Include="assets\Scripts\jquery-1.10.2.min.js" />
-    <None Include="assets\Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="assets\Scripts\jquery.validate.js" />
-    <Content Include="assets\Scripts\jquery.validate.min.js" />
-    <Content Include="assets\Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="assets\Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="assets\Scripts\modernizr-2.6.2.js" />
-    <Content Include="assets\Scripts\respond.js" />
     <Content Include="assets\Scripts\respond.min.js" />
+    <Content Include="Resources\markets.xml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -187,7 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="assets\img\" />
-    <Folder Include="Models\" />
+    <Folder Include="Views\Helper\" />
     <Folder Include="_settings\App_Data\" />
   </ItemGroup>
   <ItemGroup>
@@ -201,9 +193,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="assets\Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
