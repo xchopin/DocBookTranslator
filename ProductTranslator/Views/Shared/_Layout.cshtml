@@ -27,14 +27,14 @@
             </div>
         </nav>
      
-                @if (ViewBag.flash_type != null)
+                @if (TempData["flash.message"] != null)
                 {
                      <div class="container">
                        <div class="row">
                           <div class="col-lg-12">
-                              <div class="alert alert-@ViewBag.flash_type fade in">
+                              <div class="alert alert-@TempData["flash.type"] fade in">
                                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                  <p>@ViewBag.flash_message</p>
+                                  <p>@TempData["flash.message"]</p>
                               </div>
                            </div>
                        </div>
