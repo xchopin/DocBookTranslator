@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<markets>
+  <market id='water'>
+    <logo>fa fa-2x fa-tint</logo>
+    <name>Water</name>
+  </market>
+  <market id='valves'>
+    <logo>fa fa-2x fa-shower</logo>
+    <name>Valves</name>
+  </market>
+  <market id='sewage'>
+    <logo>fa fa-2x fa-minus</logo>
+    <name>Sewage</name>
+  </market>
+  <market id='municipal_castings'>
+    <logo>fa fa-2x fa-stop-circle-o</logo>
+    <name>Municipal castings</name>
+  </market>
+  <market id='industry'>
+    <logo>fa fa-2x fa-industry</logo>
+    <name>Industry</name>
+  </market>
+  <market id='technical_solutions'>
+    <logo>fa fa-2x fa-wrench</logo>
+    <name>Technical solutions</name>
+  </market>
+</markets>
