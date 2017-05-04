@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "Translation";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 class="text-center">
+                @(ViewBag.productId).xml  
+            </h3>
+        </div>
+        <form action='@Url.Action("TranslateProduct")' method="POST">
+            <input type="hidden" name="productId" value="@ViewBag.productId">
+            <div class="left-side">
+           
+                @for (int i=0; i < ViewBag.forms.Count; i++)
+                {
+                    <div id='content@(i)' class="content-to-translate">
+                        @ViewBag.forms[i] <br>
+                    </div>
+                }
+               
+            </div>
+            <div class="right-side">
+               
+                @for (int i=0; i < ViewBag.forms.Count; i++)
+                {
+                <script>
+                            var textarea = $('<textarea>').addClass('form-control translation')
+                            var height = $('#content@(i)').height()
+                            textarea.height(height + 20) // Because of the padding in css class
+                            textarea.attr('name', 'translation@(i)')
+                            textarea.attr('required','required')
+                            $('.right-side').append(textarea)
+                </script>
+                }
+            </div>
+            <button type='button' id='modalButton' class="square-button"><i class="fa fa-check"></i> Valider</button>
+        </form>
+
+
+
+        <!-- Modal -->
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalContent"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id='submit' class="btn btn-default" type="submit">Traduire</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+        $('#submit').click( function(){
+            $('form').submit()
+        })
+        $('#modalButton').click(function() {
+            var res = true;
+            $('textarea').each(function() {
+                if(!$(this).val()){
+                    res = false
+                    return false
+                }
+            });
+            if (res) {
+                $('.modal-title').text('Confirmation')
+                $('#modalContent').text('Avant de confirmer, veuillez vérifier les informations entrées.')
+                $('.modal-footer').show()
+                $("#myModal").modal()
+            }else{
+                $('.modal-title').text('Erreur')
+                $('#modalContent').html('<i class="fa fa-warning"></i> Certains champs sont vides.')
+                $('.modal-footer').hide()
+                $("#myModal").modal()
+            }
+        })
+</script>
+
+
