@@ -13,9 +13,7 @@ namespace ProductTranslator.Controllers
 {
     public class ProductController : BaseController
     {
-
         private static List<String> data;
-      
 
         public ActionResult Index(String id)
         {
@@ -47,23 +45,18 @@ namespace ProductTranslator.Controllers
         public ActionResult TranslateProduct()
         {
             String id = Request.Params["productId"];
-         
-
             String dirName = "~/Resources/DB/Eau/it/";
-
             // Works only if the directory does not exist (https://msdn.microsoft.com/en-us/library/54a0at6s.aspx)
             Directory.CreateDirectory(Server.MapPath(dirName));
-
             String src = "~/Resources/DB/Eau/fr/" + id + ".xml";
             XmlDocument xml = new XmlDocument();
-            data = new List<String>(Request.Form.Count-1);
+            data = new List<String>(Request.Form.Count - 1);
 
             // Node values start at i = 1 in POST params
-            for (int i = 0; i < Request.Form.Count-1; i++)
+            for (int i = 0; i < Request.Form.Count - 1; i++)
             {
-               data.Add(Request.Form["translation" + i]);     
+                data.Add(Request.Form["translation" + i]);
             }
-
 
             xml.Load(Server.MapPath(src));
             ReplaceContent(xml, "title");
@@ -113,13 +106,12 @@ namespace ProductTranslator.Controllers
                         if (!Regex.IsMatch(value, @"^\d+$") && !value.StartsWith("[!!!!!") && value.Length > 1)
                         {
                             subNode.InnerText = data[0];
-                          
                             data.RemoveAt(0);
                         }
-                            
-                    }
-                    this.ReplaceContent(subNode, element);
 
+                    }
+
+                    this.ReplaceContent(subNode, element);
                 }
             }
         }

@@ -6,7 +6,7 @@ namespace ProductTranslator.Controllers
 {
     public class HomeController : BaseController
     {
-       
+
         public ActionResult Index()
         {
             XmlDocument xml = new XmlDocument();
@@ -20,7 +20,8 @@ namespace ProductTranslator.Controllers
         {
             String productId = Request["productId"];
 
-            if (System.IO.File.Exists(Server.MapPath("~/Resources/DB/Eau/fr/" + productId + ".xml"))) {
+            if (System.IO.File.Exists(Server.MapPath("~/Resources/DB/Eau/fr/" + productId + ".xml")))
+            {
                 this.Flash("success", "File exists !");
                 return RedirectToAction("Index", "Product", new { id = productId });
             }
@@ -29,12 +30,6 @@ namespace ProductTranslator.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+   
     }
 }
- 

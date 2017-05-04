@@ -24,16 +24,16 @@
                 Markets
             </h3>
             <hr>
-                @foreach(XmlNode market in ViewBag.markets)
-                {
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
-                        <div class="dummy"></div>
-                        <a class="thumbnail">
-                            <i class="@market.SelectSingleNode("logo").InnerText"></i> <br><br>
-                            <p>@market.SelectSingleNode("name").InnerText</p>
-                        </a>
-                    </div>
-                  }
+            @foreach (XmlNode market in ViewBag.markets)
+            {
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                    <div class="dummy"></div>
+                    <a class="thumbnail">
+                        <i class="@market.SelectSingleNode("logo").InnerText"></i> <br><br>
+                        <p>@market.SelectSingleNode("name").InnerText</p>
+                    </a>
+                </div>
+            }
         </div>
     </div>
 </div>

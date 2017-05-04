@@ -11,44 +11,44 @@
     @Styles.Render("~/assets/Content/css")
     @Scripts.Render("~/bundles/jquery")
 </head>
-    <body>
-        <nav class="navbar navbar-default navbar-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header page-scroll">
-                    <img class="logo" src="~/assets/img/logo.png" runat="server" alt="Saint-Gobain PAM">
-                </div>
+<body>
+    <nav class="navbar navbar-default navbar-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <img class="logo" src="~/assets/img/logo.png" runat="server" alt="Saint-Gobain PAM">
+            </div>
 
-                <div class="collapse float-right navbar-collapse navbar-ex1-collapse">
-                    <ul class="nav navbar-nav pull-right">
-                        <li> <a href="" class="navbar-tab">Home</a> </li>
-                        <li> <a href="" class="navbar-tab">Create a file from a product</a> </li>
-                        <li> <a href='http://pamline.com' class="navbar-tab">Saint-Gobain PAM</a> </li>
-                    </ul>
+            <div class="collapse float-right navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav pull-right">
+                    <li> <a href="" class="navbar-tab">Home</a> </li>
+                    <li> <a href="" class="navbar-tab">Create a file from a product</a> </li>
+                    <li> <a href='http://pamline.com' class="navbar-tab">Saint-Gobain PAM</a> </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    @if (TempData["flash.message"] != null)
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="alert alert-@TempData["flash.type"] fade in">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <p>@TempData["flash.message"]</p>
+                    </div>
                 </div>
             </div>
-        </nav>
-     
-                @if (TempData["flash.message"] != null)
-                {
-                     <div class="container">
-                       <div class="row">
-                          <div class="col-lg-12">
-                              <div class="alert alert-@TempData["flash.type"] fade in">
-                                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                  <p>@TempData["flash.message"]</p>
-                              </div>
-                           </div>
-                       </div>
-                      </div>
-                }
+        </div>
+    }
 
 
-                @RenderBody()
+    @RenderBody()
 
-          
-               @Scripts.Render("~/bundles/bootstrap")
-               @RenderSection("scripts", required: false)
-               <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-               <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 </html>
