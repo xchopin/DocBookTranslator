@@ -8,6 +8,8 @@
     <title>@ViewBag.Title | Product Translator</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
     @Styles.Render("~/assets/Content/css")
     @Scripts.Render("~/bundles/jquery")
 </head>
@@ -20,8 +22,7 @@
 
             <div class="collapse float-right navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav pull-right">
-                    <li> <a href="" class="navbar-tab">Home</a> </li>
-                    <li> <a href="" class="navbar-tab">Create a file from a product</a> </li>
+                    <li> <a href="@Url.Action("Homepage")" class="navbar-tab">Home</a> </li>
                     <li> <a href='http://pamline.com' class="navbar-tab">Saint-Gobain PAM</a> </li>
                 </ul>
             </div>
@@ -45,10 +46,20 @@
 
     @RenderBody()
 
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">
+                <a href="">Contact</a>  &nbsp;
+                <a href="http://www.pamline.com/legal-notice">Legal Notice</a>
+                <a href="">Links</a> &nbsp;
+                <img id="saint-gobain" class="pull-right" src="~/assets/img/saintgobain.png" alt="saint-gobain">
+            </p>
+        </div>
+    </footer>
 
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </body>
 </html>
