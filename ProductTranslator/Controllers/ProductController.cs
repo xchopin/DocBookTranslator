@@ -33,6 +33,9 @@ namespace ProductTranslator.Controllers
                     ViewBag.forms = data;
                     ViewBag.productId = id;
 
+                    xml.Load(Server.MapPath("~/Resources/languages.xml"));
+                    ViewBag.languages = xml.SelectNodes("/languages/language");
+
                     return View();
                 }
 
@@ -45,29 +48,48 @@ namespace ProductTranslator.Controllers
         public ActionResult TranslateProduct()
         {
             String id = Request.Params["productId"];
-            String dirName = "~/Resources/DB/Eau/it/";
-            // Works only if the directory does not exist (https://msdn.microsoft.com/en-us/library/54a0at6s.aspx)
-            Directory.CreateDirectory(Server.MapPath(dirName));
-            String src = "~/Resources/DB/Eau/fr/" + id + ".xml";
+            String languageId = Request.Params["input_languageId"];
+            System.Diagnostics.Debug.WriteLine("C'EST NOTRE PROJET" + languageId);
+            Console.WriteLine("LANGUE  : " + languageId);
+
+            /** CREATE A DIRECTORY */
             XmlDocument xml = new XmlDocument();
-            data = new List<String>(Request.Form.Count - 1);
+            xml.Load(Server.MapPath("~/Resources/languages.xml"));
 
-            // Node values start at i = 1 in POST params
-            for (int i = 0; i < Request.Form.Count - 1; i++)
+            // Prevents against bad path ! (Check if the language exists)
+            try
             {
-                data.Add(Request.Form["translation" + i]);
+                String test = xml.SelectSingleNode("/languages/language[@id='" + languageId + "']").InnerText;
+                String dirName = "~/Resources/DB/Eau/" + languageId + "/";
+                // Works only if the directory does not exist (https://msdn.microsoft.com/en-us/library/54a0at6s.aspx)
+                Directory.CreateDirectory(Server.MapPath(dirName));
+
+                /** CHANGE THE CONTENT */
+                String src = "~/Resources/DB/Eau/fr/" + id + ".xml";
+                data = new List<String>(Request.Form.Count - 1);
+
+                // Node values start at i = 2 in POST params
+                for (int i = 0; i < Request.Form.Count - 2; i++)
+                {
+                    data.Add(Request.Form["translation" + i]);
+                }
+
+                xml.Load(Server.MapPath(src));
+                ReplaceContent(xml, "title");
+                ReplaceContent(xml, "para");
+                ReplaceContent(xml, "emphasis");
+                ReplaceContent(xml, "entry");
+                xml.PreserveWhitespace = true;
+                xml.Save(Server.MapPath(dirName + id + ".xml"));
+
+                this.Flash("success", "Translation succeeded!");
+                return RedirectToAction("Index", "Home");
+            } catch (Exception e) {
+                this.Flash("danger", "This language does not exist, please verify the xml language file (developer)");
+                return RedirectToAction("Index", "Home");
             }
-
-            xml.Load(Server.MapPath(src));
-            ReplaceContent(xml, "title");
-            ReplaceContent(xml, "para");
-            ReplaceContent(xml, "emphasis");
-            ReplaceContent(xml, "entry");
-            xml.PreserveWhitespace = true;
-            xml.Save(Server.MapPath(dirName + id + ".xml"));
-
-            this.Flash("success", "Translation succeeded!");
-            return RedirectToAction("Index", "Home");
+       
+            
         }
 
 
