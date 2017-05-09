@@ -26,8 +26,8 @@ namespace ProductTranslator
            );
             routes.MapRoute(
             name: "ShowForm",
-            url: "datasheet/{productId}",
-            defaults: new { controller = "Product", action = "Index", productId = String.Empty }
+            url: "datasheet/{id}",
+            defaults: new { controller = "Product", action = "Index", id = String.Empty }
           );
             routes.MapRoute(
              name: "TranslateProduct",

@@ -1,6 +1,15 @@
 ﻿@import url('https://fonts.googleapis.com/css?family=Oxygen');
 @import url('https://fonts.googleapis.com/css?family=Lato');
 
+.flag-text {
+    margin-left: 10px;
+}
+
+select {
+    width: 100%;
+}
+
+
 .logo {
     margin: 10px;
 }
@@ -239,6 +248,10 @@ hr {
 
 .translation {
     margin-bottom: 2em;
+}
+
+.select-custom {
+    min-height: 3em;
 }
 
 textarea:focus,

@@ -151,7 +151,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\Content\app.css" />
-    <Content Include="assets\Content\bootstrap.css" />
     <Content Include="assets\Content\bootstrap.min.css" />
     <Content Include="assets\img\logo.png" />
     <Content Include="assets\img\saintgobain.png" />
@@ -159,23 +158,10 @@
     <Content Include="favicon.ico" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="assets\Content\Site.css" />
-    <Content Include="assets\Scripts\bootstrap.js" />
     <Content Include="assets\Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="assets\Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="assets\Scripts\jquery-1.10.2.js" />
-    <Content Include="assets\Scripts\jquery-1.10.2.min.js" />
-    <None Include="assets\Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="assets\Scripts\jquery.validate.js" />
-    <Content Include="assets\Scripts\jquery.validate.min.js" />
-    <Content Include="assets\Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="assets\Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="assets\Scripts\modernizr-2.6.2.js" />
-    <Content Include="assets\Scripts\respond.js" />
-    <Content Include="assets\Scripts\respond.min.js" />
     <Content Include="Resources\DB\Eau\fr\3-01_4-01-tables.xml" />
     <Content Include="Resources\DB\Eau\fr\3-01_4-02-tables.xml" />
     <Content Include="Resources\DB\Eau\fr\3-01_4-03-tables.xml" />
@@ -824,6 +810,7 @@
     <Content Include="Resources\DB\Eau\fr\type-sols-library.xml" />
     <Content Include="Resources\DB\Eau\fr\verrouillages-library.xml" />
     <Content Include="Resources\DB\Eau\it\EBLTE00BLT505.xml" />
+    <Content Include="Resources\languages.xml" />
     <Content Include="Resources\markets.xml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -854,9 +841,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="assets\Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
