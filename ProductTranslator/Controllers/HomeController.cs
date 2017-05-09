@@ -7,6 +7,10 @@ namespace ProductTranslator.Controllers
     public class HomeController : BaseController
     {
 
+        /**
+         * Render the index page
+         * 
+         */
         public ActionResult Index()
         {
             XmlDocument xml = new XmlDocument();
@@ -16,6 +20,10 @@ namespace ProductTranslator.Controllers
             return View();
         }
 
+        /*
+         * Find a product in the database and redirect to the form page
+         * 
+         */ 
         public ActionResult SearchProduct()
         {
             String productId = Request["productId"];

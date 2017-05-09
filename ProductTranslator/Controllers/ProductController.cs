@@ -15,6 +15,12 @@ namespace ProductTranslator.Controllers
     {
         private static List<String> data;
 
+
+        /**
+         * Render the form page for the translation of a product
+         * 
+         * @param id : product id
+         */ 
         public ActionResult Index(String id)
         {
             if (id != null)
@@ -45,13 +51,16 @@ namespace ProductTranslator.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+
+       /**
+        * Create a XML file of the translation previously done
+        * 
+        */
         public ActionResult TranslateProduct()
         {
             String id = Request.Params["productId"];
             String languageId = Request.Params["input_languageId"];
-            System.Diagnostics.Debug.WriteLine("C'EST NOTRE PROJET" + languageId);
-            Console.WriteLine("LANGUE  : " + languageId);
-
+    
             /** CREATE A DIRECTORY */
             XmlDocument xml = new XmlDocument();
             xml.Load(Server.MapPath("~/Resources/languages.xml"));
@@ -116,6 +125,13 @@ namespace ProductTranslator.Controllers
             }
         }
 
+
+        /**
+         * Replace the content of all the elements, given, in the XML file loaded
+         * 
+         * @param XmlNode node
+         * @param String element
+         */
         private void ReplaceContent(XmlNode node, String element)
         {
             if (node.HasChildNodes)
