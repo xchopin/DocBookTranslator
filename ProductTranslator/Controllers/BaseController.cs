@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace ProductTranslator.Controllers
 {
-    public class BaseController : Controller
+    public abstract class BaseController : Controller
     {
         /**
          * Create flash messages

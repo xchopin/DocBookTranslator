@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Web.Mvc;
 using System.Xml;
 
@@ -28,16 +30,30 @@ namespace ProductTranslator.Controllers
         {
             String productId = Request["productId"];
 
-            if (System.IO.File.Exists(Server.MapPath("~/Resources/DB/Eau/fr/" + productId + ".xml")))
+            String[] directories = Directory.GetDirectories(Server.MapPath("~/Resources/DB/"), "*", System.IO.SearchOption.AllDirectories);
+
+            TempData["path"] = null;
+
+            foreach (String directory in directories)
             {
-                this.Flash("success", "File exists !");
-                return RedirectToAction("Index", "Product", new { id = productId });
+                if (directory.EndsWith("fr"))
+                {
+                    if (System.IO.File.Exists(directory + "\\" +  productId + ".xml"))
+                    {
+                        TempData["path"] = directory + "\\";
+                        TempData["file"] = directory + "\\" + productId + ".xml";
+                    }
+                }                   
+            }
+         
+
+            if (TempData["path"] == null)
+            {
+                this.Flash("danger", "Error: this product id does not exist!");
+                return RedirectToAction("Index");
             }
 
-            this.Flash("danger", "Error: this product id does not exist!");
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Product", new { id = productId });
         }
-
-   
     }
 }

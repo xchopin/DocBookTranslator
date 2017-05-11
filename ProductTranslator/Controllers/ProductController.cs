@@ -23,31 +23,29 @@ namespace ProductTranslator.Controllers
          */ 
         public ActionResult Index(String id)
         {
-            if (id != null)
-            {
-                String file = "~/Resources/DB/Eau/fr/" + id + ".xml";
-                if (id != null && System.IO.File.Exists(Server.MapPath(file)))
-                {
-                    XmlDocument xml = new XmlDocument();
-                    data = new List<String>();
-                    xml.Load(Server.MapPath(file));
-                    AllElement(xml, "title");
-                    AllElement(xml, "para");
-                    AllElement(xml, "emphasis");
-                    AllElement(xml, "entry");
+           if (TempData["file"] != null && TempData["path"] != null)
+           {
+                XmlDocument xml = new XmlDocument();
+                data = new List<String>();
+                xml.Load(TempData["file"].ToString());
+                AllElement(xml, "title");
+                AllElement(xml, "para");
+                AllElement(xml, "emphasis");
+                AllElement(xml, "entry");
 
-                    ViewBag.forms = data;
-                    ViewBag.productId = id;
+                ViewBag.forms = data;
+                ViewBag.productId = id;
 
-                    xml.Load(Server.MapPath("~/Resources/languages.xml"));
-                    ViewBag.languages = xml.SelectNodes("/languages/language");
+                xml.Load(Server.MapPath("~/Resources/languages.xml"));
+                ViewBag.languages = xml.SelectNodes("/languages/language");
 
-                    return View();
-                }
+                TempData["path"] = TempData["path"]; // To be sure it persists: TempData has a short-lived instance
+                TempData["file"] = TempData["file"];
 
-            }
+                return View();
+           }
 
-            this.Flash("danger", "Error: this product id does not exist!");
+            this.Flash("danger", "Please use the quicksearch instead of typing in the address bar");
             return RedirectToAction("Index", "Home");
         }
 
@@ -58,47 +56,57 @@ namespace ProductTranslator.Controllers
         */
         public ActionResult TranslateProduct()
         {
-            String id = Request.Params["productId"];
-            String languageId = Request.Params["input_languageId"];
-    
-            /** CREATE A DIRECTORY */
-            XmlDocument xml = new XmlDocument();
-            xml.Load(Server.MapPath("~/Resources/languages.xml"));
 
-            // Prevents against bad path ! (Check if the language exists)
-            try
+            if (TempData["file"] != null && TempData["path"] != null)
             {
-                String test = xml.SelectSingleNode("/languages/language[@id='" + languageId + "']").InnerText;
-                String dirName = "~/Resources/DB/Eau/" + languageId + "/";
-                // Works only if the directory does not exist (https://msdn.microsoft.com/en-us/library/54a0at6s.aspx)
-                Directory.CreateDirectory(Server.MapPath(dirName));
+                String id = Request.Params["productId"];
+                String languageId = Request.Params["input_languageId"];
 
-                /** CHANGE THE CONTENT */
-                String src = "~/Resources/DB/Eau/fr/" + id + ".xml";
-                data = new List<String>(Request.Form.Count - 1);
+                XmlDocument xml = new XmlDocument();
+                xml.Load(Server.MapPath("~/Resources/languages.xml"));
 
-                // Node values start at i = 2 in POST params
-                for (int i = 0; i < Request.Form.Count - 2; i++)
+                // Prevents against bad path ! (Check if the language exists)
+                try
                 {
-                    data.Add(Request.Form["translation" + i]);
+                    String test = xml.SelectSingleNode("/languages/language[@id='" + languageId + "']").InnerText;
+
+                    // Delete the two last letters of the source dir (in this case 'fr')
+                    String marketPath = TempData["path"].ToString().Remove(TempData["path"].ToString().Length - 3);
+                    String dirName = marketPath + languageId + "/";
+                   
+                    // Works only if the directory does not exist (https://msdn.microsoft.com/en-us/library/54a0at6s.aspx)
+                    Directory.CreateDirectory(dirName);
+
+                    // Node values start at i = 2 in POST params (if you don't know why check the view)
+                    int fieldsNumber = Request.Form.Count - 2;  
+                    data = new List<String>(fieldsNumber);
+                    for (int i = 0; i < fieldsNumber; i++)
+                    {
+                        data.Add(Request.Form["translation" + i]);
+                    }
+
+                    // This part change and save the new content
+                    xml.Load(TempData["file"].ToString());
+                    ReplaceContent(xml, "title");
+                    ReplaceContent(xml, "para");
+                    ReplaceContent(xml, "emphasis");
+                    ReplaceContent(xml, "entry");
+                    xml.PreserveWhitespace = true;
+                    xml.Save(dirName + id + ".xml");
+
+                    this.Flash("success", "Translation succeeded!");
+                    return RedirectToAction("Index", "Home");
                 }
-
-                xml.Load(Server.MapPath(src));
-                ReplaceContent(xml, "title");
-                ReplaceContent(xml, "para");
-                ReplaceContent(xml, "emphasis");
-                ReplaceContent(xml, "entry");
-                xml.PreserveWhitespace = true;
-                xml.Save(Server.MapPath(dirName + id + ".xml"));
-
-                this.Flash("success", "Translation succeeded!");
-                return RedirectToAction("Index", "Home");
-            } catch (Exception e) {
-                this.Flash("danger", "This language does not exist, please verify the xml language file (developer)");
-                return RedirectToAction("Index", "Home");
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                    this.Flash("danger", "This language does not exist, please verify the xml language file (developer)");
+                    return RedirectToAction("Index", "Home");
+                }
             }
-       
-            
+
+            this.Flash("danger", "An error occured, you might be faster to fill the fields.");
+            return RedirectToAction("Index", "Home");
         }
 
 
