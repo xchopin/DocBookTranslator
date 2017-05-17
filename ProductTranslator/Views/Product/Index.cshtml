@@ -92,7 +92,7 @@ $('#submit').click(function () {
         var res = true;
         $('textarea').each(function () {
             console.log($(this).val())
-            if (!(/^(?!\d+$)[^>#<*]+$/.test($(this).val()))) {
+            if (!(/^(?!\d+$)[^>#<]+$/.test($(this).val()))) {
                 $('.modal-title').text('Something went wrong')
                 $('#modalContent').html('<i class="fa fa-warning"></i> Only letters and numbers.')
                 $('.modal-footer').hide()
