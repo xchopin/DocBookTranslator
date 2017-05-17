@@ -30,15 +30,25 @@ namespace ProductTranslator
             defaults: new { controller = "Product", action = "Index", id = String.Empty }
           );
             routes.MapRoute(
-             name: "TranslateProduct",
-             url: "translate",
-             defaults: new { controller = "Product", action = "TranslateProduct"}
+            name: "TranslateProduct",
+            url: "translate",
+            defaults: new { controller = "Product", action = "TranslateProduct"}
           );
-
-
-
-
-            
+           routes.MapRoute(
+           name: "editSearch",
+           url: "edit",
+           defaults: new { controller = "Home", action = "SearchEdit" }
+          );
+           routes.MapRoute(
+           name: "SearchTranslatedProduct",
+           url: "search-edit",
+           defaults: new { controller = "Home", action = "SearchTranslatedProduct" }
+          );
+           routes.MapRoute(
+           name: "EditForm",
+           url: "edit/{id}",
+           defaults: new { controller = "Product", action = "EditForm", id = String.Empty }
+          );
 
         }
     }
