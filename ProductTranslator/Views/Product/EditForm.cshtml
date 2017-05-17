@@ -16,40 +16,34 @@
         </div>
         <form action='@Url.Action("TranslateProduct")' method="POST">
             <input type="hidden" name="productId" value="@ViewBag.productId">
-            <input type="hidden" name="input_languageId" id="input_languageId">
-            
-           
+            <input type="hidden" name="input_languageId" value='@TempData["languageId"]'>
+        
             <div class="left-side">
-                <div class="content-to-translate" style="background-color:#4a4a4a;">
-                  TRANSLATION FOR<br>
+                <div class="content-to-translate" style="background-color:#4a4a4a; text-transform:uppercase;">
+                    TRANSLATION FOR @ViewBag.language<br>
                 </div>
-
+                
                 @for (int i = 0; i < ViewBag.forms.Count; i++)
                 {
                     <div id='content@(i)' class="content-to-translate">
                         @ViewBag.forms[i] <br>
                     </div>
                 }
-
             </div>
 
             <div class="right-side">
-                <div class="translation">
-                    <div class="select-custom">
-                        <select id="destination" required name="languageId">
-                            <option disabled selected>Select a language</option>
-                        </select>
-                    </div>
-                </div>
-               
-                @for (int i = 0; i < ViewBag.forms.Count; i++)
+                
+
+                @for (int i = 0; i < ViewBag.edited.Count; i++)
                 {
                     <script>
                             var textarea = $('<textarea>').addClass('form-control translation')
                             var height = $('#content@(i)').height()
                             textarea.height(height + 20) // Because of the padding in css class
                             textarea.attr('name', 'translation@(i)')
-                            textarea.attr('required','required')
+                            textarea.attr('required', 'required')
+                            textarea.val("@ViewBag.edited[i]")
+
                             $('.right-side').append(textarea)
                     </script>
                 }
@@ -96,14 +90,9 @@ $('#submit').click(function () {
                 return false
             }
         });
-        if (!$('#input_languageId').val()) {
-            $('.modal-title').text('Something went wrong')
-            $('#modalContent').html('<i class="fa fa-warning"></i> Please select a language for the translation.')
-            $('.modal-footer').hide()
-            $("#myModal").modal()
-        } else if (res) {
+        if (res) {
             $('.modal-title').text('Confirmation')
-            $('#modalContent').text('Warning, this file might already get translated, in this case validating will erase it.')
+            $('#modalContent').text('Before to continue, please check the fields you filled.')
             $('.modal-footer').show()
             $("#myModal").modal()
         } else {
@@ -115,38 +104,6 @@ $('#submit').click(function () {
     })
 
 
-   
-           var isoCountries = [
-           @foreach (XmlNode node in ViewBag.languages)
-           {
-            @:{ id: '@node.Attributes["id"].Value', text: '@node.Attributes["name"].Value' },
-           }
-           ]
-    
-  
-           function formatCountry(country) {
-               if (!country.id) { return country.text; }
-               var $country = $(
-                   '<span class="flag-icon flag-icon-' + country.id.toLowerCase() + ' flag-icon-squared"></span>' +
-                   '<span class="flag-text">' + country.text + "</span>"
-               );
-               return $country;
-           }
-
-               
-
-            $("[name='languageId']").select2().on("change", function (e) {
-                $('#input_languageId').val($(this).val())
-           })
-
-
-            $(document).ready(function () {
-                $("[name='languageId']").select2({
-                    placeholder: "Select a country",
-                    templateResult: formatCountry,
-                    data: isoCountries
-                });
-            });
 
 </script>
 
