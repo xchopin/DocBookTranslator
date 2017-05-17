@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml;
 
 namespace ProductTranslator.Controllers
 {
@@ -29,6 +30,18 @@ namespace ProductTranslator.Controllers
         protected ActionResult Render(String file)
         {
             return View("~/Views/" + file + ".cshtml");
+        }
+
+
+        /**
+         * Add the languages from the XML file into the ViewBag
+         * 
+         */
+        protected void sendLanguages()
+        {
+            System.Xml.XmlDocument xml = new XmlDocument();
+            xml.Load(Server.MapPath("~/Resources/languages.xml"));
+            ViewBag.languages = xml.SelectNodes("/languages/language");
         }
     }
 }
