@@ -91,25 +91,27 @@ $('#submit').click(function () {
     $('#modalButton').click(function () {
         var res = true;
         $('textarea').each(function () {
-            if (!$(this).val()) {
+            console.log($(this).val())
+            if (!(/^(?!\d+$)[^>#<*]+$/.test($(this).val()))) {
+                $('.modal-title').text('Something went wrong')
+                $('#modalContent').html('<i class="fa fa-warning"></i> Only letters and numbers.')
+                $('.modal-footer').hide()
+                $("#myModal").modal()
+                res = false
+                return false
+            } else if (!$(this).val()) {
+                $('.modal-title').text('Something went wrong')
+                $('#modalContent').html('<i class="fa fa-warning"></i> Some fields are empty.')
+                $('.modal-footer').hide()
+                $("#myModal").modal()
                 res = false
                 return false
             }
         });
-        if (!$('#input_languageId').val()) {
-            $('.modal-title').text('Something went wrong')
-            $('#modalContent').html('<i class="fa fa-warning"></i> Please select a language for the translation.')
-            $('.modal-footer').hide()
-            $("#myModal").modal()
-        } else if (res) {
+        if (res) {
             $('.modal-title').text('Confirmation')
-            $('#modalContent').text('Warning, this file might already get translated, in this case validating will erase it.')
+            $('#modalContent').text('Before to continue, please check the fields you filled.')
             $('.modal-footer').show()
-            $("#myModal").modal()
-        } else {
-            $('.modal-title').text('Something went wrong')
-            $('#modalContent').html('<i class="fa fa-warning"></i> Some fields are empty.')
-            $('.modal-footer').hide()
             $("#myModal").modal()
         }
     })

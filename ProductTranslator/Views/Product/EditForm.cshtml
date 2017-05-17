@@ -20,7 +20,7 @@
         
             <div class="left-side">
                 <div class="content-to-translate" style="background-color:#4a4a4a; text-transform:uppercase;">
-                    TRANSLATION FOR @ViewBag.language<br>
+                    TRANSLATION FOR <br>
                 </div>
                 
                 @for (int i = 0; i < ViewBag.forms.Count; i++)
@@ -32,7 +32,9 @@
             </div>
 
             <div class="right-side">
-                
+                <div class="content-to-translate" style="background-color:#4a4a4a; text-transform:uppercase;">
+                  @ViewBag.language<br>
+                </div>
 
                 @for (int i = 0; i < ViewBag.edited.Count; i++)
                 {
@@ -85,7 +87,19 @@ $('#submit').click(function () {
     $('#modalButton').click(function () {
         var res = true;
         $('textarea').each(function () {
-            if (!$(this).val()) {
+            console.log($(this).val())
+            if (!(/^(?!\d+$)[^>#<*]+$/.test($(this).val()))) {
+                $('.modal-title').text('Something went wrong')
+                $('#modalContent').html('<i class="fa fa-warning"></i> Only letters and numbers.')
+                $('.modal-footer').hide()
+                $("#myModal").modal()
+                res = false
+                return false
+            }else if (!$(this).val()) {
+                $('.modal-title').text('Something went wrong')
+                $('#modalContent').html('<i class="fa fa-warning"></i> Some fields are empty.')
+                $('.modal-footer').hide()
+                $("#myModal").modal()
                 res = false
                 return false
             }
@@ -94,11 +108,6 @@ $('#submit').click(function () {
             $('.modal-title').text('Confirmation')
             $('#modalContent').text('Before to continue, please check the fields you filled.')
             $('.modal-footer').show()
-            $("#myModal").modal()
-        } else {
-            $('.modal-title').text('Something went wrong')
-            $('#modalContent').html('<i class="fa fa-warning"></i> Some fields are empty.')
-            $('.modal-footer').hide()
             $("#myModal").modal()
         }
     })
