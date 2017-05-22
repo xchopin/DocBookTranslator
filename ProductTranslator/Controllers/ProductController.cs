@@ -15,12 +15,14 @@ namespace ProductTranslator.Controllers
     {
         private static List<String> data;
 
+        string[] elements = { "title", "para", "emphasis", "entry" }; // Nodes containing text
+
 
         /**
          * Render the form page for the translation of a product
          * 
          * @param id : product id
-         */ 
+         */
         public ActionResult Index(String id)
         {
            if (TempData["file"] != null && TempData["path"] != null)
@@ -29,18 +31,15 @@ namespace ProductTranslator.Controllers
                 data = new List<String>();
                 xml.PreserveWhitespace = true;
                 xml.Load(TempData["file"].ToString());
-                AllElement(xml, "title");
-                AllElement(xml, "para");
-                AllElement(xml, "emphasis");
-                AllElement(xml, "entry");
+                AllElement(xml, this.elements);
 
                 ViewBag.forms = data;
                 ViewBag.productId = id;
 
                 this.sendLanguages();
 
-                TempData["path"] = TempData["path"]; // To be sure it persists: TempData has a short-lived instance
-                TempData["file"] = TempData["file"];
+                Session["path"] = TempData["path"]; // To be sure it persists: TempData has a short-lived instance
+                Session["file"] = TempData["file"];
 
                 return View();
            }
@@ -66,10 +65,8 @@ namespace ProductTranslator.Controllers
                 // Original Content [FR]
                 String path = TempData["path"].ToString();
                 xml.Load(path.Remove(path.Length - 3) + "fr\\" + id + ".xml");
-                AllElement(xml, "title");
-                AllElement(xml, "para");
-                AllElement(xml, "emphasis");
-                AllElement(xml, "entry");
+
+                AllElement(xml, elements);
 
                 ViewBag.forms = data;
                 ViewBag.productId = id;
@@ -79,11 +76,10 @@ namespace ProductTranslator.Controllers
                 data = new List<String>();
                 xml.PreserveWhitespace = true;
                 xml.Load(TempData["file"].ToString());
-                AllElement(xml, "title");
-                AllElement(xml, "para");
-                AllElement(xml, "emphasis");
-                AllElement(xml, "entry");
 
+                
+                AllElement(xml, this.elements);
+       
                 if (data.Count != ViewBag.forms.Count)
                 {
                     this.Flash("warning", "This translation was not well settled. Create one instead");
@@ -108,8 +104,8 @@ namespace ProductTranslator.Controllers
                 ViewBag.productId = id;
 
                 // To be sure it persists: TempData has a short-lived instance
-                TempData["path"] = TempData["path"];
-                TempData["file"] = TempData["file"];
+                Session["path"] = TempData["path"];
+                Session["file"] = TempData["file"];
 
                 return View();
            }
@@ -124,8 +120,9 @@ namespace ProductTranslator.Controllers
          */
         public ActionResult TranslateProduct()
         {
+        
 
-            if (TempData["file"] != null && TempData["path"] != null)
+            if (Session["file"] != null && Session["path"] != null)
             {
                 String id = Request.Params["productId"];
                 String languageId = Request.Params["input_languageId"];
@@ -144,7 +141,7 @@ namespace ProductTranslator.Controllers
                 }
 
                 // Delete the two last letters of the source dir (in this case 'fr')
-                String marketPath = TempData["path"].ToString().Remove(TempData["path"].ToString().Length - 3);
+                String marketPath = Session["path"].ToString().Remove(Session["path"].ToString().Length - 3);
                 String dirName = marketPath + languageId + "/";
 
                 // Works only if the directory does not exist (https://msdn.microsoft.com/en-us/library/54a0at6s.aspx)
@@ -160,11 +157,8 @@ namespace ProductTranslator.Controllers
 
                 // This part change and save the new content
                 xml.PreserveWhitespace = true;
-                xml.Load(TempData["file"].ToString());
-                ReplaceContent(xml, "title");
-                ReplaceContent(xml, "para");
-                ReplaceContent(xml, "emphasis");
-                ReplaceContent(xml, "entry");
+                xml.Load(Session["file"].ToString());
+                ReplaceContent(xml, this.elements);
                 xml.Save(dirName + id + ".xml");
 
                 this.Flash("success", "Translation succeeded!");
@@ -181,25 +175,24 @@ namespace ProductTranslator.Controllers
          * Get all the elements, given, in the XML file loaded
          * 
          * @param XmlNode node
-         * @param String element
+         * @param Array elements
          */
-        private static void AllElement(XmlNode node, String element)
+        private static void AllElement(XmlNode node, String[] elements)
         {
             if (node.HasChildNodes)
             {
                 foreach (XmlNode subNode in node.ChildNodes)
                 {
-                    if (subNode.Name == element)
+                    if (elements.Contains(subNode.Name))
                     {
                         if (!subNode.InnerXml.TrimStart().StartsWith("<")) // Solve the issue of twice elements
                         {
                             String value = subNode.InnerText;
-                            if (!Regex.IsMatch(value, @"^\d+$") && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
+                            if (!Regex.IsMatch(value, @"^[a-zA-Z\d\*]*$") && value.Length != 1 && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
                                 data.Add(subNode.InnerText);
                         }
-                       
                     }
-                    AllElement(subNode, element);
+                    AllElement(subNode, elements);
                 }
             }
         }
@@ -209,28 +202,27 @@ namespace ProductTranslator.Controllers
          * Replace the content of all the elements, given, in the XML file loaded
          * 
          * @param XmlNode node
-         * @param String element
+         * @param Array elements
          */
-        private void ReplaceContent(XmlNode node, String element)
+        private void ReplaceContent(XmlNode node, String[] elements)
         {
             if (node.HasChildNodes)
             {
                 foreach (XmlNode subNode in node.ChildNodes)
                 {
-                    if (subNode.Name == element)
+                    if (elements.Contains(subNode.Name))
                     {
                         if (!subNode.InnerXml.TrimStart().StartsWith("<"))
                         {
                             String value = subNode.InnerText;
-                            if (!Regex.IsMatch(value, @"^\d+$") && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
+                            if (!Regex.IsMatch(value, @"^[a-zA-Z\d\*]*$") && value.Length != 1 && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
                             {
-
                                 subNode.InnerText = data[0];
                                 data.RemoveAt(0);
                             }
                         }
                     }
-                    this.ReplaceContent(subNode, element);
+                    this.ReplaceContent(subNode, elements);
                 }
             }
         }
