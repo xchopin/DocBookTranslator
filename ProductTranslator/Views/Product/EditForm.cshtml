@@ -67,7 +67,7 @@
                         <p id="modalContent"></p>
                     </div>
                     <div class="modal-footer">
-                        <button id='submit' class="btn btn-default" type="submit">Translate</button>
+                        <button id='submit' class="btn btn-default" type="submit">Edit</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -90,7 +90,7 @@ $('#submit').click(function () {
             console.log($(this).val())
             if (!(/^(?!\d+$)[^>#<]+$/.test($(this).val()))) {
                 $('.modal-title').text('Something went wrong')
-                $('#modalContent').html('<i class="fa fa-warning"></i> Only letters and numbers.')
+                $('#modalContent').html('<i class="fa fa-warning"></i> Numbers alone and special characters are not allowed for security reasons..')
                 $('.modal-footer').hide()
                 $("#myModal").modal()
                 res = false
@@ -105,8 +105,8 @@ $('#submit').click(function () {
             }
         });
         if (res) {
-            $('.modal-title').text('Confirmation')
-            $('#modalContent').text('Before to continue, please check the fields you filled.')
+            $('.modal-title').text('Warning')
+            $('#modalContent').text('By clicking on the Edit button, it will erase the previous file.')
             $('.modal-footer').show()
             $("#myModal").modal()
         }
