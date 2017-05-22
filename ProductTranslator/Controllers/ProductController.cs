@@ -82,7 +82,7 @@ namespace ProductTranslator.Controllers
        
                 if (data.Count != ViewBag.forms.Count)
                 {
-                    this.Flash("warning", "This translation was not well settled. Create one instead");
+                    this.Flash("warning", "This translation was not well built (one or many fields contained a single character, a number or special chars). Please, create a new one instead.");
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -95,7 +95,7 @@ namespace ProductTranslator.Controllers
                 }
                 catch (Exception e)
                 {
-                    this.Flash("danger", "This language does not exist, please verify the xml language file (developer)");
+                    this.Flash("danger", "This language does not exist, please verify the xml language file (contact the webmaster)");
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -188,7 +188,7 @@ namespace ProductTranslator.Controllers
                         if (!subNode.InnerXml.TrimStart().StartsWith("<")) // Solve the issue of twice elements
                         {
                             String value = subNode.InnerText;
-                            if (!Regex.IsMatch(value, @"^[a-zA-Z\d\*]*$") && value.Length != 1 && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
+                            if (!Regex.IsMatch(value, @"^[\d]+$") && !Regex.IsMatch(value, @"^(?=[^a-zA-Z]*[a-zA-Z])(?=[^0-9]*[0-9])[a-zA-Z0-9]*$") && value.Length != 1 && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
                                 data.Add(subNode.InnerText);
                         }
                     }
@@ -215,7 +215,7 @@ namespace ProductTranslator.Controllers
                         if (!subNode.InnerXml.TrimStart().StartsWith("<"))
                         {
                             String value = subNode.InnerText;
-                            if (!Regex.IsMatch(value, @"^[a-zA-Z\d\*]*$") && value.Length != 1 && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
+                            if (!Regex.IsMatch(value, @"^[\d]+$") && !Regex.IsMatch(value, @"^(?=[^a-zA-Z]*[a-zA-Z])(?=[^0-9]*[0-9])[a-zA-Z0-9]*$") && value.Length != 1 && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
                             {
                                 subNode.InnerText = data[0];
                                 data.RemoveAt(0);
