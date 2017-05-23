@@ -5,6 +5,11 @@
     margin-left: 10px;
 }
 
+.error {
+    border: solid red 5px;
+    background-color: #D9C0C0;
+}
+
 select {
     width: 100%;
 }
