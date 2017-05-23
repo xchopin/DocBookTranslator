@@ -14,6 +14,7 @@ namespace ProductTranslator.Controllers
     public class ProductController : BaseController
     {
         private static List<String> data;
+        private static List<String> dependencies; // Dockbook dependencies storage
 
         string[] elements = { "title", "para", "emphasis", "entry" }; // Nodes containing text
 
@@ -29,17 +30,20 @@ namespace ProductTranslator.Controllers
            {
                 XmlDocument xml = new XmlDocument();
                 data = new List<String>();
+                dependencies = new List<String>();
                 xml.PreserveWhitespace = true;
                 xml.Load(TempData["file"].ToString());
                 AllElement(xml, this.elements);
 
                 ViewBag.forms = data;
                 ViewBag.productId = id;
+                ViewBag.dependencies = dependencies; // other xml files that the datasheet includes (such as libraries)
+
 
                 this.sendLanguages();
 
                 Session["path"] = TempData["path"]; // To be sure it persists: TempData has a short-lived instance
-                Session["file"] = TempData["file"];
+                Session["file"] = TempData["file"]; // Session length life set on 90 minutes (Web.config)
 
                 return View();
            }
@@ -60,6 +64,7 @@ namespace ProductTranslator.Controllers
 
                 XmlDocument xml = new XmlDocument();
                 data = new List<String>();
+                dependencies = new List<String>();
                 xml.PreserveWhitespace = true;
 
                 // Original Content [FR]
@@ -120,7 +125,6 @@ namespace ProductTranslator.Controllers
          */
         public ActionResult TranslateProduct()
         {
-        
 
             if (Session["file"] != null && Session["path"] != null)
             {
@@ -148,6 +152,7 @@ namespace ProductTranslator.Controllers
                 Directory.CreateDirectory(dirName);
 
                 data = new List<String>();
+              
 
                 foreach (String key in Request.Form)
                 {
@@ -188,10 +193,21 @@ namespace ProductTranslator.Controllers
                         if (!subNode.InnerXml.TrimStart().StartsWith("<")) // Solve the issue of twice elements
                         {
                             String value = subNode.InnerText;
-                            if (!Regex.IsMatch(value, @"^[\d]+$") && !Regex.IsMatch(value, @"^(?=[^a-zA-Z]*[a-zA-Z])(?=[^0-9]*[0-9])[a-zA-Z0-9]*$") && value.Length != 1 && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
+                            if (!Regex.IsMatch(value, @"[+-]?([0-9]*[.])?[0-9]+") && !Regex.IsMatch(value, @"^(?=[^a-zA-Z]*[a-zA-Z])(?=[^0-9]*[0-9])[a-zA-Z0-9]*$") && value.Length > 2 && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
                                 data.Add(subNode.InnerText);
                         }
                     }
+
+                    if (subNode.Name == "xi:include")
+                    {
+                        String href = subNode.Attributes["href"].Value;
+                        if (!dependencies.Contains(href)) {
+                            dependencies.Add(href);
+                        }
+                        
+
+                    }
+    
                     AllElement(subNode, elements);
                 }
             }
@@ -215,7 +231,7 @@ namespace ProductTranslator.Controllers
                         if (!subNode.InnerXml.TrimStart().StartsWith("<"))
                         {
                             String value = subNode.InnerText;
-                            if (!Regex.IsMatch(value, @"^[\d]+$") && !Regex.IsMatch(value, @"^(?=[^a-zA-Z]*[a-zA-Z])(?=[^0-9]*[0-9])[a-zA-Z0-9]*$") && value.Length != 1 && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
+                            if (!Regex.IsMatch(value, @"[+-]?([0-9]*[.])?[0-9]+") && !Regex.IsMatch(value, @"^(?=[^a-zA-Z]*[a-zA-Z])(?=[^0-9]*[0-9])[a-zA-Z0-9]*$") && value.Length > 2 && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
                             {
                                 subNode.InnerText = data[0];
                                 data.RemoveAt(0);
