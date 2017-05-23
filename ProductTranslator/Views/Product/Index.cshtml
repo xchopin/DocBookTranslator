@@ -89,18 +89,29 @@ $('#submit').click(function () {
 })
 
     $('#modalButton').click(function () {
-        var res = true;
+        var res = true;    
         $('textarea').each(function () {
+            $(this).removeClass('error')
             if ($(this).val()) {
-                if (!(/^(?!\d+$)[^>#<]+$/.test($(this).val()))) {
+                if ((/^-?\d*(\.\d+)?$/.test($(this).val()))) {
+                    $(this).addClass('error')
                     $('.modal-title').text('Something went wrong')
-                    $('#modalContent').html('<i class="fa fa-warning"></i> Numbers alone and special characters are not allowed for security reasons.')
+                    $('#modalContent').html('<i class="fa fa-warning"></i> Numbers are not a translation.')
+                    $('.modal-footer').hide()
+                    $("#myModal").modal()
+                    res = false
+                    return false
+                } else if ($(this).val().length < 3) {
+                    $(this).addClass('error')
+                    $('.modal-title').text('Something went wrong')
+                    $('#modalContent').html('<i class="fa fa-warning"></i> Translations require at least 3 characters.')
                     $('.modal-footer').hide()
                     $("#myModal").modal()
                     res = false
                     return false
                 }
             } else {
+                $(this).addClass('error')
                 $('.modal-title').text('Something went wrong')
                 $('#modalContent').html('<i class="fa fa-warning"></i> Some fields are empty.')
                 $('.modal-footer').hide()
@@ -111,22 +122,31 @@ $('#submit').click(function () {
         });
         if (res) {
             $('.modal-title').text('Warning')
-            $('#modalContent').text('If a translation was already done, it will erase it.')
+            $('#modalContent').html('If this datasheet was already translated, it will erase it.<span id="conditiontrue"></span> ')
             $('.modal-footer').show()
             $("#myModal").modal()
+            @if (ViewBag.dependencies.Count > 0)
+            {
+                   <text>  $('#conditiontrue').html("<br> <hr> <strong class='text-center'><i class='fa fa-warning'></i> Caution: This datasheet includes libraries. You will have to translate them if it is not already done. <br> </strong> <br> <i>Please save the name of these following files</i> <br><hr> <ul id='requirements'></ul>") </text>
+            }
+            @for (int i = 0; i < ViewBag.dependencies.Count; i++)
+            {
+                 <text>  $('#requirements').append( $('<ul>').text("@ViewBag.dependencies[i].Remove(ViewBag.dependencies[i].Length - 4)") ) </text>
+            }
+
         }
     })
 
 
-   
+
            var isoCountries = [
            @foreach (XmlNode node in ViewBag.languages)
            {
             @:{ id: '@node.Attributes["id"].Value', text: '@node.Attributes["name"].Value' },
            }
            ]
-    
-  
+
+
            function formatCountry(country) {
                if (!country.id) { return country.text; }
                var $country = $(
@@ -136,7 +156,7 @@ $('#submit').click(function () {
                return $country;
            }
 
-               
+
 
             $("[name='languageId']").select2().on("change", function (e) {
                 $('#input_languageId').val($(this).val())

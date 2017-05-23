@@ -87,22 +87,33 @@ $('#submit').click(function () {
     $('#modalButton').click(function () {
         var res = true;
         $('textarea').each(function () {
-            console.log($(this).val())
-            if (!(/^(?!\d+$)[^>#<]+$/.test($(this).val()))) {
+            $(this).removeClass('error')
+            if ((/^-?\d*(\.\d+)?$/.test($(this).val()))) {
+                $(this).addClass('error')
                 $('.modal-title').text('Something went wrong')
-                $('#modalContent').html('<i class="fa fa-warning"></i> Numbers alone and special characters are not allowed for security reasons..')
+                $('#modalContent').html('<i class="fa fa-warning"></i> Numbers are not a translation.')
                 $('.modal-footer').hide()
                 $("#myModal").modal()
                 res = false
                 return false
-            }else if (!$(this).val()) {
+            } else if (!$(this).val()) {
+                $(this).addClass('error')
                 $('.modal-title').text('Something went wrong')
                 $('#modalContent').html('<i class="fa fa-warning"></i> Some fields are empty.')
                 $('.modal-footer').hide()
                 $("#myModal").modal()
                 res = false
                 return false
+            } else if ($(this).val().length < 3) {
+                $(this).addClass('error')
+                $('.modal-title').text('Something went wrong')
+                $('#modalContent').html('<i class="fa fa-warning"></i> Translations require at least 3 characters.')
+                $('.modal-footer').hide()
+                $("#myModal").modal()
+                res = false
+                return false
             }
+
         });
         if (res) {
             $('.modal-title').text('Warning')
