@@ -69,11 +69,11 @@
 
     $('#submit').click(function (e) {
         if (!$('#input_languageId').val()) {
-         //   e.preventDefault();
-          //  $('.modal-title').text('Something went wrong')
-          //  $('#modalContent').html('<i class="fa fa-warning"></i> Please select a language for the translation.')
-          //  $('.modal-footer').hide()
-          //  $("#myModal").modal()
+            e.preventDefault();
+            $('.modal-title').text('Something went wrong')
+            $('#modalContent').html('<i class="fa fa-warning"></i> Please select a language for the translation.')
+            $('.modal-footer').hide()
+            $("#myModal").modal()
         } 
     })
 
