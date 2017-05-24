@@ -5,8 +5,8 @@
     margin-left: 10px;
 }
 
-.error {
-    border: solid red 5px;
+textarea.error {
+    border: solid red 5px !important;
     background-color: #D9C0C0;
 }
 
