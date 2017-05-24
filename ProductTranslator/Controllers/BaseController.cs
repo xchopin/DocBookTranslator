@@ -9,6 +9,9 @@ namespace ProductTranslator.Controllers
 {
     public abstract class BaseController : Controller
     {
+
+        protected String language = "fr";
+
         /**
          * Create flash messages
          * 

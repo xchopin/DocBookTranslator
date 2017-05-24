@@ -8,6 +8,7 @@ using System.Xml;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace ProductTranslator.Controllers
 {
@@ -67,9 +68,9 @@ namespace ProductTranslator.Controllers
                 dependencies = new List<String>();
                 xml.PreserveWhitespace = true;
 
-                // Original Content [FR]
+                // Original Content
                 String path = TempData["path"].ToString();
-                xml.Load(path.Remove(path.Length - 3) + "fr\\" + id + ".xml");
+                xml.Load(path.Remove(path.Length - 3) + this.language + "\\" + id + ".xml");
 
                 AllElement(xml, elements);
 
@@ -144,7 +145,7 @@ namespace ProductTranslator.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                // Delete the two last letters of the source dir (in this case 'fr')
+                // Delete the two last letters of the source dir (in this case 'en')
                 String marketPath = Session["path"].ToString().Remove(Session["path"].ToString().Length - 3);
                 String dirName = marketPath + languageId + "/";
 
@@ -152,7 +153,6 @@ namespace ProductTranslator.Controllers
                 Directory.CreateDirectory(dirName);
 
                 data = new List<String>();
-              
 
                 foreach (String key in Request.Form)
                 {
@@ -163,6 +163,10 @@ namespace ProductTranslator.Controllers
                 // This part change and save the new content
                 xml.PreserveWhitespace = true;
                 xml.Load(Session["file"].ToString());
+
+                var lang = xml.DocumentElement.Attributes["xml:lang"];
+                lang.InnerText = languageId;
+
                 ReplaceContent(xml, this.elements);
                 xml.Save(dirName + id + ".xml");
 
@@ -202,7 +206,11 @@ namespace ProductTranslator.Controllers
                     {
                         String href = subNode.Attributes["href"].Value;
                         if (!dependencies.Contains(href)) {
-                            dependencies.Add(href);
+                            if (!href.StartsWith("..")) // Prevent against dependencies from International directory
+                            {
+                                dependencies.Add(href);
+                            }
+                           
                         }
                         
 
