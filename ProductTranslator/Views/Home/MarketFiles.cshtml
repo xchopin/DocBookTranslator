@@ -1,0 +1,214 @@
+﻿@{
+    ViewBag.Title = "File Browser - Market " + ViewBag.market;
+}
+@using System.Xml;
+
+<div class="container">
+    <div class="row">
+            <input type="hidden" name="input_languageId" id="input_languageId">
+            <div class="col-lg-12">
+                <h2 class="text-center">
+                   @ViewBag.market Market  
+                </h2>
+            </div>
+            <hr />
+            <div class="col-lg-12">
+                <div class="container">
+                    <div class="col-lg-6">
+                        <h4><strong> This market contains: @ViewBag.files.Count datasheets</strong></h4>
+                        </div>
+                    <div class="col-lg-6">
+                        <input type="hidden" name="input_languageId" id="input_languageId">
+                       <div class="select-custom">
+                        <select id="destination" required name="languageId">
+                            <option disabled selected>Select a language</option>
+                        </select>
+                    </div>
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="black">Filename</th>
+                                <th class="black"></th>
+                                <th class="black"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (String file in ViewBag.files)
+                            {
+                            <tr>
+                               <td>
+                                   <i class="fa fa-file-text-o"></i>
+                                   <span class="filename">@file.Remove(file.Length - 4)</span>
+                               </td>
+                                <input type=hidden value="@file.Remove(file.Length - 4)" />
+                               <td class="translate-box">
+                                   <i class="fa fa-globe"></i> Translate
+                                  
+                               </td>
+                               <td class="information-box">
+                                  <input type=hidden value="@file.Remove(file.Length - 4)" />
+                                  <span class="informations"><i class="fa fa-question"></i> Informations</span>
+                               </td>
+                            </tr>
+                            }
+                       </tbody>
+                    </table>
+                 </div>
+            </div>
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body">
+                            <p id="modalContent">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Country</th>
+                                            <th>Translated</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="insertTranslation"></tbody>
+                                </table>
+                            </p>
+                     </div>
+                    <div class="modal-footer">
+                        <button id='submit' class="btn btn-default" type="submit">Translate</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+</div>
+
+<script>
+
+
+    $('.informations').click(function() {
+        $('.modal-title').text( $(this).prev('input').val() )
+        $('.modal-footer').hide()
+        $("#myModal").modal()
+        $('#insertTranslation').empty()
+
+            $.ajax({
+                url: '@Url.RouteUrl("IsTranslated")',
+                type: "GET",
+                data: { productId: $(this).prev('input').val(), market: '@ViewBag.market' },
+                success: function (response) {
+                    $.each(response, function (k, v) {
+                        if (v.exists === true) {
+                            var tr = $('<tr>')
+                            var td = $('<td>')
+                            var span = $('<span>').addClass("flag-icon").addClass("flag-icon-"+v.id)
+                            var td2 = $('<td>').html("<i style='color:green;' class='fa fa-check'></i> Yes")
+                            var td3 = $('<td>').html("<strong><i class='fa fa-pencil'></i> Edit </strong>")
+                            td.append(span).append(" " + v.name)
+                            tr.append(td)
+                            tr.append(td2)
+                            tr.append(td3)
+                            td3.click(function () {
+                                console.log('productId:' + v.productId + ' market: ' + v.market + ' languageId: '+  v.id)
+                              $.editTranslation(
+                                    {
+                                        productId: v.productId,
+                                        market: v.market,
+                                        languageId: v.id
+
+                                    }
+                                );
+                            })
+                            $('#insertTranslation').append(tr)
+
+                        } else {
+                         $('#insertTranslation').append("<tr><td><span class='flag-icon flag-icon-" + v.id + "'></span> " + v.name + "</td>  <td> <i style='color:red;' class='fa fa-close'></i>  No</td> <td></td> </tr>")
+                        }
+                    });
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+    })
+
+
+    $('.translate-box').click(function () {
+        if ($('#input_languageId').val()) {
+            $.translate({ productId: $(this).prev('input').val(), path: '@ViewBag.path', languageId: $('#input_languageId').val()  });
+        } else {
+              $.translate({ productId: $(this).prev('input').val(), path: '@ViewBag.path' });
+        }
+
+    })
+
+
+    $.extend(
+        {
+            translate: function (args) {
+                var form = '';
+                $.each(args, function (key, value) {
+                    form += '<input type="hidden" name="' + key + '" value="' + value + '">';
+                });
+                $('<form action="@Url.Action("TranslationByBrowsing")" method="POST">' + form + '</form>').appendTo('body').submit();
+            }
+
+
+        });
+
+
+        $.extend(
+        {
+            editTranslation: function (args) {
+                var form = '';
+                $.each(args, function (key, value) {
+                    form += '<input type="hidden" name="' + key + '" value="' + value + '">';
+                });
+                $('<form action="@Url.Action("SendToEditForm")" method="POST">' + form + '</form>').appendTo('body').submit();
+            }
+
+        });
+
+
+
+
+           var isoCountries = [
+           @foreach (XmlNode node in ViewBag.languages)
+           {
+            @:{ id: '@node.Attributes["id"].Value', text: '@node.Attributes["name"].Value' },
+           }
+           ]
+
+
+           function formatCountry(country) {
+               if (!country.id) { return country.text; }
+               var $country = $(
+                   '<span class="flag-icon flag-icon-' + country.id.toLowerCase() + ' flag-icon-squared"></span>' +
+                   '<span class="flag-text">' + country.text + "</span>"
+               );
+               return $country;
+           }
+
+
+
+            $("[name='languageId']").select2().on("change", function (e) {
+                $('#input_languageId').val($(this).val())
+           })
+
+
+            $(document).ready(function () {
+                $("[name='languageId']").select2({
+                    placeholder: "Select a country",
+                    templateResult: formatCountry,
+                    data: isoCountries
+                });
+            });
+
+
+</script>
+

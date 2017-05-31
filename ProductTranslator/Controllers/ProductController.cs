@@ -9,6 +9,8 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Diagnostics;
 using System.Xml.Linq;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json.Linq;
 
 namespace ProductTranslator.Controllers
 {
@@ -27,8 +29,8 @@ namespace ProductTranslator.Controllers
          */
         public ActionResult Index(String id)
         {
-           if (TempData["file"] != null && TempData["path"] != null)
-           {
+            if (TempData["file"] != null && TempData["path"] != null)
+            {
                 XmlDocument xml = new XmlDocument();
                 data = new List<String>();
                 dependencies = new List<String>();
@@ -39,7 +41,7 @@ namespace ProductTranslator.Controllers
                 ViewBag.forms = data;
                 ViewBag.productId = id;
                 ViewBag.dependencies = dependencies; // other xml files that the datasheet includes (such as libraries)
-
+                ViewBag.languageId = TempData["languageId"];
 
                 this.sendLanguages();
 
@@ -47,22 +49,23 @@ namespace ProductTranslator.Controllers
                 Session["file"] = TempData["file"]; // Session length life set on 90 minutes (Web.config)
 
                 return View();
-           }
+            }
 
             this.Flash("danger", "Please use the quicksearch instead of typing in the address bar");
             return RedirectToAction("Index", "Home");
         }
 
 
+
+
         /*
          * Create the form page for editing a datasheet
          * 
-         */ 
+         */
         public ActionResult EditForm(String id)
         {
-             if (TempData["file"] != null && TempData["path"] != null)
-           {
-
+            if (TempData["file"] != null && TempData["path"] != null)
+            {
                 XmlDocument xml = new XmlDocument();
                 data = new List<String>();
                 dependencies = new List<String>();
@@ -83,9 +86,9 @@ namespace ProductTranslator.Controllers
                 xml.PreserveWhitespace = true;
                 xml.Load(TempData["file"].ToString());
 
-                
+
                 AllElement(xml, this.elements);
-       
+
                 if (data.Count != ViewBag.forms.Count)
                 {
                     this.Flash("warning", "This translation was not well built (one or many fields contained a single character, a number or special chars). Please, create a new one instead.");
@@ -98,6 +101,7 @@ namespace ProductTranslator.Controllers
                     xml.Load(Server.MapPath("~/Resources/languages.xml"));
                     XmlNode node = xml.SelectSingleNode("/languages/language[@id='" + TempData["languageId"] + "']");
                     ViewBag.language = node.Attributes["name"].Value;
+
                 }
                 catch (Exception e)
                 {
@@ -114,7 +118,7 @@ namespace ProductTranslator.Controllers
                 Session["file"] = TempData["file"];
 
                 return View();
-           }
+            }
 
             this.Flash("danger", "Please use the quicksearch instead of typing in the address bar");
             return RedirectToAction("Index", "Home");
@@ -140,7 +144,6 @@ namespace ProductTranslator.Controllers
                 }
                 catch (Exception e)
                 {
-                    //Debug.WriteLine(e);
                     this.Flash("danger", "This language does not exist, please verify the xml language file (developer)");
                     return RedirectToAction("Index", "Home");
                 }
@@ -205,23 +208,24 @@ namespace ProductTranslator.Controllers
                     if (subNode.Name == "xi:include")
                     {
                         String href = subNode.Attributes["href"].Value;
-                        if (!dependencies.Contains(href)) {
+                        if (!dependencies.Contains(href))
+                        {
                             if (!href.StartsWith("..")) // Prevent against dependencies from International directory
                             {
                                 dependencies.Add(href);
                             }
-                           
+
                         }
-                        
+
 
                     }
-    
+
                     AllElement(subNode, elements);
                 }
             }
         }
 
-        
+
         /**
          * Replace the content of all the elements, given, in the XML file loaded
          * 
@@ -249,6 +253,36 @@ namespace ProductTranslator.Controllers
                     this.ReplaceContent(subNode, elements);
                 }
             }
+        }
+
+
+        /**
+         *  API function, gives in which language the datasheet was translated
+         * */
+        public ActionResult IsTranslated()
+        {
+        
+            String productId = Request.Params["productId"];
+            String market = Request.Params["market"];
+
+            System.Xml.XmlDocument xml = new XmlDocument();
+            xml.Load(Server.MapPath("~/Resources/languages.xml"));
+            JObject countries = new JObject();
+
+            foreach (XmlNode node in xml.SelectNodes("/languages/language"))
+            {
+                JObject country = new JObject();
+                String countryId = node.Attributes["id"].Value;
+                String path = Server.MapPath("~/Resources/DB/" + market + "/" + countryId + "/");
+                country["exists"] = System.IO.File.Exists(path + productId + ".xml");
+                country["name"] = node.Attributes["name"].Value;
+                country["productId"] = productId;
+                country["market"] = market;
+                country["id"] = node.Attributes["id"].Value;
+                countries[countryId] = country;
+            }
+
+            return Content(countries.ToString(), "application/json");
         }
     }
 }

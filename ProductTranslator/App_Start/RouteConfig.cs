@@ -25,6 +25,11 @@ namespace ProductTranslator
              defaults: new { controller = "Home", action = "SearchProduct"}
            );
             routes.MapRoute(
+            name: "TranslationByBrowsing",
+            url: "checking",
+            defaults: new { controller = "Home", action = "TranslationByBrowsing" }
+          );
+            routes.MapRoute(
             name: "ShowForm",
             url: "datasheet/{id}",
             defaults: new { controller = "Product", action = "Index", id = String.Empty }
@@ -48,6 +53,21 @@ namespace ProductTranslator
            name: "EditForm",
            url: "edit/{id}",
            defaults: new { controller = "Product", action = "EditForm", id = String.Empty }
+          );
+            routes.MapRoute(
+            name: "BrowseByMarket",
+            url: "market/{market}",
+            defaults: new { controller = "Home", action = "MarketFiles", market = String.Empty }
+          );
+            routes.MapRoute(
+            name: "IsTranslated",
+            url: "api/translation/",
+            defaults: new { controller = "Product", action = "IsTranslated"}
+          );
+            routes.MapRoute(
+            name: "SendToEditForm",
+            url: "redirect/edit/{id}",
+            defaults: new { controller = "Home", action = "SendToEditForm", id = "null"}
           );
 
         }

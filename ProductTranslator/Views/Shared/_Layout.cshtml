@@ -12,6 +12,11 @@
 
     @Styles.Render("~/assets/Content/css")
     @Scripts.Render("~/bundles/jquery")
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.8.0/css/flag-icon.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
 </head>
 <body>
     <nav class="navbar navbar-default navbar-top" role="navigation">
@@ -60,6 +65,7 @@
             </p>
         </div>
     </footer>
+
 
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

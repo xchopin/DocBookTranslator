@@ -2,10 +2,6 @@
     ViewBag.Title = "Translation";
 }
 @using System.Xml;
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.8.0/css/flag-icon.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-
 
 <div class="container">
     <div class="row">
@@ -89,7 +85,7 @@ $('#submit').click(function () {
 })
 
     $('#modalButton').click(function () {
-        var res = true;    
+        var res = true;
         $('textarea').each(function () {
             $(this).removeClass('error')
             if ($(this).val()) {
@@ -169,7 +165,10 @@ $('#submit').click(function () {
                     templateResult: formatCountry,
                     data: isoCountries
                 });
+              
             });
+
+   
 
 </script>
 

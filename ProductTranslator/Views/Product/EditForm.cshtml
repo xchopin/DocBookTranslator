@@ -2,10 +2,6 @@
     ViewBag.Title = "Translation";
 }
 @using System.Xml;
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.8.0/css/flag-icon.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-
 
 <div class="container">
     <div class="row">
@@ -67,8 +63,8 @@
                         <p id="modalContent"></p>
                     </div>
                     <div class="modal-footer">
-                        <button id='submit' class="btn btn-default" type="submit">Edit</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button id='submit' class="btn btn-default" type="submit"><i class="fa fa-check"></i> Validate</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-sign-out"></i> Close</button>
                     </div>
                 </div>
 
@@ -117,7 +113,7 @@ $('#submit').click(function () {
         });
         if (res) {
             $('.modal-title').text('Warning')
-            $('#modalContent').text('By clicking on the Edit button, it will erase the previous file.')
+            $('#modalContent').text('By clicking on the validate button, it will overwritten the previous file.')
             $('.modal-footer').show()
             $("#myModal").modal()
         }
