@@ -41,7 +41,7 @@ namespace ProductTranslator.Controllers
                 ViewBag.forms = data;
                 ViewBag.productId = id;
                 ViewBag.dependencies = dependencies; // other xml files that the datasheet includes (such as libraries)
-                ViewBag.languageId = TempData["languageId"];
+                ViewBag.languageId = TempData["languageId"]; // If it's defined by the user in market browsing
 
                 this.sendLanguages();
 

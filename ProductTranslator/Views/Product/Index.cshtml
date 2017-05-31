@@ -165,10 +165,10 @@ $('#submit').click(function () {
                     templateResult: formatCountry,
                     data: isoCountries
                 });
-              
+                $("[name='languageId']").val('@ViewBag.languageId').trigger('change');
             });
 
-   
+
 
 </script>
 
