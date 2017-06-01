@@ -259,11 +259,8 @@ namespace ProductTranslator.Controllers
         /**
          *  API function, gives in which language the datasheet was translated
          * */
-        public ActionResult IsTranslated()
+        public ActionResult IsTranslated(String market, String productId)
         {
-        
-            String productId = Request.Params["productId"];
-            String market = Request.Params["market"];
 
             System.Xml.XmlDocument xml = new XmlDocument();
             xml.Load(Server.MapPath("~/Resources/languages.xml"));

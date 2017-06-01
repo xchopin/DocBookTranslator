@@ -91,16 +91,16 @@
 <script>
 
 
-    $('.informations').click(function() {
-        $('.modal-title').text( $(this).prev('input').val() )
+    $('.informations').click(function () {
+        var id = $(this).prev('input').val()
+        $('.modal-title').text(id)
         $('.modal-footer').hide()
         $("#myModal").modal()
         $('#insertTranslation').empty()
-
+       
             $.ajax({
-                url: '@Url.RouteUrl("IsTranslated")',
+                url: '/api/markets/@ViewBag.market/datasheet/' + id,
                 type: "GET",
-                data: { productId: $(this).prev('input').val(), market: '@ViewBag.market' },
                 success: function (response) {
                     $.each(response, function (k, v) {
                         if (v.exists === true) {
