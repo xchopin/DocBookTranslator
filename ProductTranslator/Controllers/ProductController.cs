@@ -281,5 +281,34 @@ namespace ProductTranslator.Controllers
 
             return Content(countries.ToString(), "application/json");
         }
+
+
+        public ActionResult FilterByLanguage(String market, String countryId)
+        {
+            try
+            {
+                XmlDocument xml = new XmlDocument();
+                xml.Load(Server.MapPath("~/Resources/markets.xml"));
+                XmlNode node = xml.SelectSingleNode("//*[@id='" + market + "']");
+                String marketName = node["name"].InnerText;
+                List<String> list = Directory.GetFiles(Server.MapPath("~/Resources/DB/" + marketName + "/" + countryId), "*.xml")
+                                     .Select(Path.GetFileName)
+                                     .ToList();
+                JObject files = new JObject();
+                foreach (String datasheet in list)
+                {
+                    JObject file = new JObject();
+                    files[datasheet] = true;
+                }
+
+                return Content(files.ToString(), "application/json");
+            }
+            catch (Exception e)
+            {
+                return Content(String.Empty, "application/json");
+            }
+
+
+        }
     }
 }

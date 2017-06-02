@@ -37,7 +37,7 @@
                             @foreach (String file in ViewBag.files)
                             {
                             <tr>
-                               <td>
+                               <td class="file-container">
                                    <i class="fa fa-file-text-o"></i>
                                    <span class="filename">@file.Remove(file.Length - 4)</span>
                                </td>
@@ -97,7 +97,7 @@
         $('.modal-footer').hide()
         $("#myModal").modal()
         $('#insertTranslation').empty()
-       
+
             $.ajax({
                 url: '/api/markets/@ViewBag.market/datasheet/' + id,
                 type: "GET",
@@ -156,7 +156,7 @@
                 $.each(args, function (key, value) {
                     form += '<input type="hidden" name="' + key + '" value="' + value + '">';
                 });
-                $('<form action="@Url.Action("TranslationByBrowsing")" method="POST">' + form + '</form>').appendTo('body').submit();
+                $('<form target="_blank" action="@Url.Action("TranslationByBrowsing")" method="POST">' + form + '</form>').appendTo('body').submit();
             }
 
 
@@ -170,7 +170,7 @@
                 $.each(args, function (key, value) {
                     form += '<input type="hidden" name="' + key + '" value="' + value + '">';
                 });
-                $('<form action="@Url.Action("SendToEditForm")" method="POST">' + form + '</form>').appendTo('body').submit();
+                $('<form target="_blank" action="@Url.Action("SendToEditForm")" method="POST">' + form + '</form>').appendTo('body').submit();
             }
 
         });
@@ -197,8 +197,26 @@
 
 
 
-            $("[name='languageId']").select2().on("change", function (e) {
-                $('#input_languageId').val($(this).val())
+           $("[name='languageId']").select2().on("change", function (e) {
+                var val = $(this).val()
+                $('#input_languageId').val(val)
+                $('.file-container').removeClass('translated')
+                 $.ajax({
+                url: '/api/markets/@ViewBag.marketId/languages/' + val,
+                type: "GET",
+                success: function (response) {
+                    $.each(response, function (k, v) {
+                        var filename = k.substring(0, k.length - 4)
+                        $('.file-container:contains(' + filename + ')').addClass('translated')
+
+                    });
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+
+
            })
 
 

@@ -309,3 +309,8 @@ th.black {
      cursor: pointer;
      background-color: #406DA6;
 }
+
+.translated {
+    background-color: mediumseagreen;
+    color:white;
+}

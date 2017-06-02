@@ -121,6 +121,7 @@ namespace ProductTranslator.Controllers
 
                 ViewBag.path = marketName + "/" + this.language;
                 ViewBag.market = marketName;
+                ViewBag.marketId = market;
                 this.sendLanguages();
                 return View();
             }

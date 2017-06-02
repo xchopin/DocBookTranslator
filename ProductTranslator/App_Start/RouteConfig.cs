@@ -26,7 +26,7 @@ namespace ProductTranslator
            );
             routes.MapRoute(
             name: "TranslationByBrowsing",
-            url: "redirect/translate/{id}",
+            url: "redirect/translation",
             defaults: new { controller = "Home", action = "TranslationByBrowsing" }
           );
             routes.MapRoute(
@@ -68,6 +68,11 @@ namespace ProductTranslator
             name: "SendToEditForm",
             url: "redirect/edit/{id}",
             defaults: new { controller = "Home", action = "SendToEditForm", id = "null"}
+          );
+            routes.MapRoute(
+            name: "FilterByLanguage",
+            url: "api/markets/{market}/languages/{countryId}",
+            defaults: new { controller = "Product", action = "FilterByLanguage", market = String.Empty, countryId = String.Empty }
           );
 
         }
