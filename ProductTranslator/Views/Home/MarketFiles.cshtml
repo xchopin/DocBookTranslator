@@ -156,7 +156,7 @@
                 $.each(args, function (key, value) {
                     form += '<input type="hidden" name="' + key + '" value="' + value + '">';
                 });
-                $('<form target="_blank" action="@Url.Action("TranslationByBrowsing")" method="POST">' + form + '</form>').appendTo('body').submit();
+                $('<form target="_blank" action="@Url.Action("SendToTranslateForm")" method="POST">' + form + '</form>').appendTo('body').submit();
             }
 
 

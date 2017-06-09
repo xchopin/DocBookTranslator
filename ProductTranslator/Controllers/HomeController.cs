@@ -64,7 +64,7 @@ namespace ProductTranslator.Controllers
       *  It also checks if the file path given by the client exists. 
       *  (never trust the client especially when we use IO.File)
       * */
-        public ActionResult TranslationByBrowsing()
+        public ActionResult SendToTranslateForm()
         {
             String productId = Request["productId"];
             if (Request["languageId"] != null)

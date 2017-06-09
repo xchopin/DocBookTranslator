@@ -10,42 +10,49 @@
                 @(ViewBag.productId).xml
             </h3>
         </div>
+    </div>
         <form action='@Url.Action("TranslateProduct")' method="POST">
             <input type="hidden" name="productId" value="@ViewBag.productId">
             <input type="hidden" name="input_languageId" value='@TempData["languageId"]'>
 
-            <div class="left-side">
-                <div class="content-to-translate" style="background-color:#4a4a4a; text-transform:uppercase;">
-                    TRANSLATION FOR <br>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="languages">TRANSLATION FOR <span style="uppercase">@ViewBag.language</span></div>
                 </div>
+            </div>
+            
                 
-                @for (int i = 0; i < ViewBag.forms.Count; i++)
-                {
-                    <div id='content@(i)' class="content-to-translate">
-                        @ViewBag.forms[i] <br>
-                    </div>
-                }
-            </div>
+               @for (int i = 0; i < ViewBag.forms.Count; i++)
+                    {
+                        if (ViewBag.sections.Count > ViewBag.forms.Count+1 && ViewBag.sections[i].ToString() != "")
+                        {
+                             <div class="row">
+                                  <div class="col-lg-12">
+                                      <div class="section"> <strong>SECTION @ViewBag.sections[i]</strong> </div>
+                                  </div>
+                             </div>
+                        }
+                        <div class="row">
+                             <div class="col-lg-6">
+                                <div id='content@(i)' class="content-to-translate">
+                                   @ViewBag.forms[i]
+                                </div>
+                             </div>
+                            <div id="div@(i)" class="col-lg-6"></div>
+                       </div>
 
-            <div class="right-side">
-                <div class="content-to-translate" style="background-color:#4a4a4a; text-transform:uppercase;">
-                  @ViewBag.language<br>
-                </div>
-
-                @for (int i = 0; i < ViewBag.edited.Count; i++)
-                {
                     <script>
-                            var textarea = $('<textarea>').addClass('form-control translation')
-                            var height = $('#content@(i)').height()
-                            textarea.height(height + 20) // Because of the padding in css class
-                            textarea.attr('name', 'translation@(i)')
-                            textarea.attr('required', 'required')
-                            textarea.val("@ViewBag.edited[i]")
-
-                            $('.right-side').append(textarea)
+                           var textarea = $('<textarea>').addClass('form-control translation')
+                           var height = $('#content@(i)').height()
+                           textarea.height(height + 20) // Because of the padding in css class
+                           textarea.attr('name', 'translation@(i)')
+                           textarea.attr('required', 'required')
+                           textarea.val("@ViewBag.edited[i]")
+                           $('#div@(i)').append(textarea)
                     </script>
-                }
-            </div>
+                    }
+
             <button type='button' id='modalButton' class="square-button"><i class="fa fa-check"></i> Validate</button>
         </form>
 
@@ -70,8 +77,6 @@
 
             </div>
         </div>
-
-    </div>
 </div>
 
 <script>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -17,7 +17,8 @@ namespace ProductTranslator.Controllers
     public class ProductController : BaseController
     {
         private static List<String> data;
-        private static List<String> dependencies; // Dockbook dependencies storage
+        private static List<String> sections;
+        private static List<String> dependencies; // Datasheet dependencies storage
 
         string[] elements = { "title", "para", "emphasis", "entry" }; // Nodes containing text
 
@@ -31,9 +32,12 @@ namespace ProductTranslator.Controllers
         {
             if (TempData["file"] != null && TempData["path"] != null)
             {
+                // Init.
                 XmlDocument xml = new XmlDocument();
                 data = new List<String>();
                 dependencies = new List<String>();
+                sections = new List<String>();
+
                 xml.PreserveWhitespace = true;
                 xml.Load(TempData["file"].ToString());
                 AllElement(xml, this.elements);
@@ -42,8 +46,9 @@ namespace ProductTranslator.Controllers
                 ViewBag.productId = id;
                 ViewBag.dependencies = dependencies; // other xml files that the datasheet includes (such as libraries)
                 ViewBag.languageId = TempData["languageId"]; // If it's defined by the user in market browsing
+                ViewBag.sections = sections;
 
-                this.sendLanguages();
+                this.sendLanguages(); // Send the languages available in the select form
 
                 Session["path"] = TempData["path"]; // To be sure it persists: TempData has a short-lived instance
                 Session["file"] = TempData["file"]; // Session length life set on 90 minutes (Web.config)
@@ -54,8 +59,6 @@ namespace ProductTranslator.Controllers
             this.Flash("danger", "Please use the quicksearch instead of typing in the address bar");
             return RedirectToAction("Index", "Home");
         }
-
-
 
 
         /*
@@ -69,6 +72,7 @@ namespace ProductTranslator.Controllers
                 XmlDocument xml = new XmlDocument();
                 data = new List<String>();
                 dependencies = new List<String>();
+                sections = new List<String>();
                 xml.PreserveWhitespace = true;
 
                 // Original Content
@@ -80,6 +84,7 @@ namespace ProductTranslator.Controllers
                 ViewBag.forms = data;
                 ViewBag.productId = id;
                 ViewBag.languageId = TempData["languageId"];
+                ViewBag.sections = sections;
 
                 // Edited Content
                 data = new List<String>();
@@ -195,13 +200,18 @@ namespace ProductTranslator.Controllers
             {
                 foreach (XmlNode subNode in node.ChildNodes)
                 {
+                    String section = "false";
                     if (elements.Contains(subNode.Name))
                     {
                         if (!subNode.InnerXml.TrimStart().StartsWith("<")) // Solve the issue of twice elements
                         {
                             String value = subNode.InnerText;
-                            if (!Regex.IsMatch(value, @"[+-]?([0-9]*[.])?[0-9]+") && !Regex.IsMatch(value, @"^(?=[^a-zA-Z]*[a-zA-Z])(?=[^0-9]*[0-9])[a-zA-Z0-9]*$") && value.Length > 2 && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
+                            if (!Regex.IsMatch(value, @"[+-]?([0-9]*[.])?[0-9]+") && !Regex.IsMatch(value, @"^(?=[^a-zA-Z]*[a-zA-Z])(?=[^0-9]*[0-9])[a-zA-Z0-9]*$") && value.Length > 3 && !value.StartsWith("[!!!!!") && !String.IsNullOrWhiteSpace(value))
+                            {
                                 data.Add(subNode.InnerText);
+                                section = "";
+                            }
+                                
                         }
                     }
 
@@ -214,11 +224,26 @@ namespace ProductTranslator.Controllers
                             {
                                 dependencies.Add(href);
                             }
-
                         }
-
-
                     }
+
+                   if (subNode.Name == "section")
+                   {
+                    	try
+                        {
+                        	section = subNode.Attributes["xml:id"].Value;
+                        }
+                        catch (Exception e)
+                        {
+                            // Nothing.
+                        }
+                   }
+
+                   // Little trick to add Sections at the good position
+                   if (section != "false")
+                   {
+                        sections.Add(section);
+                   }
 
                     AllElement(subNode, elements);
                 }

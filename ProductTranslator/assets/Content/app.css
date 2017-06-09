@@ -47,10 +47,10 @@ body {
     border-radius: 0;
 }
 
-    .form-control:focus {
-        -webkit-box-shadow: none;
-        box-shadow: none;
-    }
+.form-control:focus {
+   -webkit-box-shadow: none;
+   box-shadow: none;
+}
 
 th {
     background-color: #E76D3F;
@@ -230,33 +230,38 @@ hr {
         text-decoration: none;
     }
 
-.left-side {
-    width: 50%;
-    float: left;
-    margin-top: 2em;
-}
-
-.right-side {
-    width: 50%;
-    float: right;
-    margin-top: 2em;
-}
 
 .content-to-translate {
     background-color: rgba(47,88,201,0.96);
     color: white;
-    margin-bottom: 2em;
     min-height: 3em;
-    margin-right: 2%;
     padding: 10px 10px;
 }
 
+.section {
+    background-color: #8a0505;
+    color: white;
+    min-height: 3em;
+    padding: 10px 10px;
+    margin-bottom: 1.5em;
+    text-align: center;
+}
+
 .translation {
-    margin-bottom: 2em;
+    margin-bottom: 1.5em;
 }
 
 .select-custom {
     min-height: 3em;
+}
+
+.languages {
+    background-color: #4a4a4a;
+    color: white;
+    min-height: 3em;
+    padding: 10px 10px;
+    margin-bottom: 1.5em;
+    text-align: center;
 }
 
 textarea:focus,

@@ -25,9 +25,9 @@ namespace ProductTranslator
              defaults: new { controller = "Home", action = "SearchProduct"}
            );
             routes.MapRoute(
-            name: "TranslationByBrowsing",
+            name: "SendToTranslateForm",
             url: "redirect/translation",
-            defaults: new { controller = "Home", action = "TranslationByBrowsing" }
+            defaults: new { controller = "Home", action = "SendToTranslateForm" }
           );
             routes.MapRoute(
             name: "ShowForm",
